@@ -25,7 +25,6 @@ Para correrlo con ejecutable:
 ```
 
 ## TODO
-[]- Terminar token de tipo `contenido_texto`.
-  - Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
-[]- Probar con archivos .txt
-[]- Probar que exporte archivo .txt cuando se analiza llamando desde terminal (argumento -f).
+[] - Terminar token de tipo `contenido_texto`. Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
+[] - Probar con archivos .txt
+[] - Probar que exporte archivo .txt cuando se analiza llamando desde terminal (argumento -f).
