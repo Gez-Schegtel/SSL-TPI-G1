@@ -2,44 +2,13 @@ import ply.ply.lex as lex   # lexer -> tokens
 import re
 import argparse
 
-#Obtener path de texto por terminal
+# Obtener path de texto por terminal
 argParser = argparse.ArgumentParser(description='Procesa strings a tokens de pseudocodigo.')
 argParser.add_argument('-f', '-pathFile', nargs='?',type=str, help='especificar ruta de archivo de texto de entrada a analizar.')
 argsParser = argParser.parse_args()
 pathFile = argsParser.f
 
 contadorErrores = 0
-arregloHtml = []
-
-# /******
-# <
-# >
-# /
-# http
-# https
-# ftp
-# ftps
-# height
-# width
-# category
-# image 
-# copyright
-# description
-# link
-# title
-# url
-# channel
-# rss
-# =
-# “
-# .
-# ?
-# xml
-# version
-# :
-# encoding
-# UTF-8
-# *****/
 
 # Terminales
 tokens = [
@@ -47,30 +16,46 @@ tokens = [
     'menorque',
     'mayorque',
     'igualque',
-    #
+    
+    # simbolos
     'comilla',
     'barra',
     'protocolo',
     'punto',
-    'prologo', # <?xml
-    # 'dospuntos', # se ocupa en protocolo
-    # 
-    'imagen_alto',
-    'imagen_ancho',
+    'dospuntos',
+    'question',
+    'height',
+    'width',
+    'UTF8',
+    'slash',
+    
+    # Simbolos URL
+    'http',
+    'https',
+    'ftp',
+    'ftps',
+
     # etiquetas
     'version',
     'encoding',
     'valor_encoding',
-    'categoria',
-    'descripcion',
+    'category',
+    'description',
     'link',
-    'titulo',
+    'title',
+    'cerrartitle',
     'url',
-    'canal',
+    'channel',
     'rss',
+    'xml',
+    'image',
+    'copyright',
+    
+    # Texto
+    'contenido_texto'
 ]
 
-# ply detecta variables que empiecen con 't_'
+# PLY detecta variables que empiecen con 't_'
 # Terminos: 
 # w = letras o numeros
 # s = todo lo que sea espacios.
@@ -78,67 +63,59 @@ tokens = [
 # d = digitos.
 # * = 0 o más.
 # + = 1 o más.
+    
+# Definición de símbolos atómicos #
 
-# def t_COMENTARIO_ENCABEZADO(t): 
-#     r'\/\*\*[\s\S]*?\*\/';
-#     if t.value.__contains__('\n'):
-#         t.lexer.lineno += t.value.count('\n')
-#         t.value= t.value.replace('\n', ' ')
-#     if t.value.__contains__('\t'):
-#         t.value= t.value.replace('\t', ' ')
-#     cambio= t.value.replace('/**', '')
-#     cambio= cambio.replace('*/','')
-#     arregloHtml.append(['encabezado', cambio])
-#     return t 
+def t_version(t): r'\bversion\b'; return (t)
 
-# def t_ES(t): r'\b(?:_es)\b'; return t
-def t_comilla(t): r'\b(?:acci[oó]n)\b'; return t 
+def t_category(t): r'\bcategory\b'; return (t)
 
-    # 'prologo', # <?xml
-    # # 'dospuntos', # se ocupa en protocolo
-    # # 
-    # 'imagen_alto',
-    # 'imagen_ancho',
+def t_description(t): r'\bdescription\b'; return (t)
 
+def t_link(t): r'\blink\b'; return (t)
+ 
+def t_title(t): r'\btitle\b'; return(t)
+def t_cerrartitle(t): r'<\/title>'; return(t)
+
+def t_url(t): r'\burl\b'; return(t)
+
+def t_channel(t): r'\bchannel\b'; return(t)
+
+def t_rss(t): r'\brss\b'; return(t)
+
+def t_http(t): r'\bhttp\b'; return(t)
+
+def t_https(t): r'\bhttps\b'; return(t)
+
+def t_ftp(t): r'\bftp\b'; return(t)
+
+def t_ftps(t): r'\bftps\b'; return(t)
+
+def t_height(t): r'\bheight\b'; return(t)
+
+def t_width(t): r'\bwidth\b'; return(t)
+
+def t_image(t): r'\bimage\b'; return(t)
+
+def t_copyright(t): r'\bcopyright\b'; return(t)
+
+def t_xml(t): r'\bxml\b'; return(t)
+
+def t_encoding(t): r'\bencoding\b'; return(t)
+
+def t_UTF8(t): r'\butf-8\b'; return(t) # Está en minúscula p/ que funcione con IGNORECASE #
 
 t_igualque = r'\='
 t_menorque = r'\<'
 t_mayorque = r'\>'
-# t_dospuntos = r'\:'
-t_comilla = r''
+t_dospuntos = r'\:'
+t_comilla = r'\"|\”' 
+t_question = r'\?'
+t_slash = r'\/'
+t_punto = r'\.'
 
-
-def t_version(t): r'\bversion\b'; return t
-
-def t_encoding(t): r'\bencoding\b'; return t
-
-def t_valor_encoding(t): r'\bvalor_encoding\b'; return t
-
-def 
-
-    # 'version',
-    # 'encoding',
-    # 'valor_encoding',
-    # 'categoria',
-    # 'descripcion',
-    # 'link',
-    # 'titulo',
-    # 'url',
-    # 'canal',
-    # 'rss',
-
-# ply ignorará espacios, saltos de lineas y tabs.
-t_ignore = ' \t;'
-
-def t_IDENTIFICADOR(t):
-    r'[_a-zA-Zñ][_a-zA-Zñ0-9]*'
-    t.type = 'IDENTIFICADOR'
-    if not(t.value[0].__contains__('_')) and not(t.value[-1].__contains__('_')) and not(t.value.__contains__('__')) and not(t.value.__contains__('"')):
-        return t
-    else: 
-        print(f'Identificador ilegal! : \'{t.value}\'.')
-        global contadorErrores
-        contadorErrores += 1
+# PLY ignorará espacios, saltos de lineas y tabs.
+t_ignore = ' \t'
 
 def t_error(t):
     global contadorErrores
@@ -147,36 +124,11 @@ def t_error(t):
     contadorErrores += 1
     t.lexer.skip(1)
 
-def t_CADENA(t):
-    r'\\?"(?:[^"\\]|\\.)*"?'
-    if not(t.value[-1] == '"') or (t.value[0] == '\\') or (t.value[-2] == '\\'):
-        print(f'Cadena ilegal! : \'{t.value}\'.')
-        global contadorErrores
-        contadorErrores += 1
-    else:
-        t.value= t.value.replace('"', '')
-        if t.value.__contains__('\\'):
-            t.value = t.value.replace('\\', '"')
-        if t.value.__contains__('\n'):
-            t.value= t.value.replace('\n', ' ')
-        if t.value.__contains__('\t'):
-            t.value= t.value.replace('\t', ' ')
-        return t
-
-def t_NUMERICO(t): # acepta . o , como decimal.
-    r'([\d]+(,|\.)[\d]+|[\d]+)'
-    if t.value.__contains__(','):
-        t.value= t.value.replace(",", ".")
-        t.value = float(t.value)
-    elif t.value.__contains__('.'):
-        t.value = float(t.value)
-    else:
-        t.value = int(t.value)
-    return t
-
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
+t_contenido_texto = r'(\w|\d)+' # ; return (t)
 
 lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
 
@@ -196,10 +148,12 @@ if __name__ == "__main__":
                     exportArray.append([tok.type,tok.value]);
                 else: print(f'Tipo: {tok.type} | Valor: {tok.value}')
 
-    # # Exportar a un txt 
+    # Exportar TOKENS a un .txt 
     def exportarTokens(arrAnalizar):
         global contadorErrores
-        with open('tokens-analizados.txt', 'w', encoding='UTF8') as f:
+        from datetime import datetime 
+        fileNameExport = f'tokens-analizados-{datetime.now().isoformat()}.txt'
+        with open(fileNameExport, 'w', encoding='UTF8') as f:
             f.write('TOKEN | VALOR\n')
             f.write('-------------\n')
             contador = 0
@@ -220,7 +174,7 @@ if __name__ == "__main__":
 
     if not pathFile:
         # Ejecución "normal"
-        print('Pasa salir pulse: [ctrl] + [C] | O escriba _salir')
+        print('Para salir pulse: [ctrl] + [C] | O escriba _salir')
         while True:
             s = input('>> ')
             if s == '_salir': break
