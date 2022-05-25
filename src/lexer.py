@@ -25,7 +25,9 @@ tokens = [
     'dospuntos',
     'question',
     'height',
+    'cerrarheight',
     'width',
+    'cerrarwidth',
     'UTF8',
     'slash',
     
@@ -37,15 +39,14 @@ tokens = [
 
     # etiquetas
     'version',
-    'cerrarversion',
     'category',
     'cerrarcategory',
     'description',
-    'cerrardescription'
+    'cerrardescription',
     'link',
-    'cerrarlink'
-    'title',
-    'cerrartitle',
+    'cerrarlink',
+    'TITULO',
+    'cerrartitulo',
     'url',
     'cerrarurl',
     'channel',
@@ -58,11 +59,14 @@ tokens = [
     'cerrarimage',
     'copyright',
     'cerrarcopyright',
+    'item',
+    'cerraritem',
     #
     'encoding',
     'valor_encoding',
     # Texto
-    'contenido_texto'
+    'contenido_texto',
+    'digito',
 ]
 
 # PLY detecta variables que empiecen con 't_'
@@ -78,8 +82,7 @@ tokens = [
 
 # Etiquetas
 
-def t_version(t): r'<version>'; return (t)
-def t_cerrarversion(t): r'<\/version>'; return (t)
+def t_version(t): r'version'; return (t)
 
 def t_category(t): r'<category>'; return (t)
 def t_cerrarcategory(t): r'<\/category>'; return (t)
@@ -90,8 +93,10 @@ def t_cerrardescription(t): r'<\/description>'; return (t)
 def t_link(t): r'<link>'; return (t)
 def t_cerrarlink(t): r'<\/link>'; return (t)
  
-def t_title(t): r'<title>'; return(t)
-def t_cerrartitle(t): r'<\/title>'; return(t)
+def t_TITULO(t): 
+    r'<title>'
+    return t; 
+def t_cerrartitulo(t): r'<\/title>'; return(t)
 
 def t_url(t): r'<url>'; return(t)
 def t_cerrarurl(t): r'<\/url\>'; return(t)
@@ -99,14 +104,17 @@ def t_cerrarurl(t): r'<\/url\>'; return(t)
 def t_channel(t): r'<channel>'; return(t)
 def t_cerrarchannel(t): r'<\/channel>'; return(t)
 
-def t_rss(t): r'<rss>'; return(t)
+def t_item(t): r'<item>'; return(t)
+def t_cerraritem(t): r'<\/item>'; return(t)
+
+def t_rss(t): r'<rss'; return(t)
 def t_cerrarrss(t): r'<\/rss>'; return(t)
 
 # Protocolos
-def t_http(t): r'http'; return(t)
 def t_https(t): r'https'; return(t)
-def t_ftp(t): r'ftp'; return(t)
+def t_http(t): r'http'; return(t)
 def t_ftps(t): r'ftps'; return(t)
+def t_ftp(t): r'ftp'; return(t)
 
 # Etiquetas opcionales
 
@@ -122,7 +130,7 @@ def t_cerrarimage(t): r'<\/image>'; return(t)
 def t_copyright(t): r'<copyright>'; return(t)
 def t_cerrarcopyright(t): r'<\/copyright>'; return(t)
 
-def t_xml(t): r'<xml>'; return(t)
+def t_xml(t): r'<\?xml'; return(t)
 def t_cerrarxml(t): r'\?\>'; return(t)
 
 # Resto
@@ -131,6 +139,7 @@ def t_encoding(t): r'encoding'; return(t)
 
 def t_UTF8(t): r'utf-8'; return(t) # Está en minúscula p/ que funcione con IGNORECASE #
 
+t_digito = r'\d+'
 t_igualque = r'\='
 t_menorque = r'\<'
 t_mayorque = r'\>'
@@ -154,7 +163,7 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-t_contenido_texto = r'(.)+(?=<\/\w+>)' # ; return (t)
+t_contenido_texto = r'(.)+' # ; return (t)
 
 lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
 
