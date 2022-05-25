@@ -21,10 +21,14 @@ python3 src/lexer.py -h
 Para correrlo con ejecutable:
 
 ```bash
-
+python3 src/lexer.py -f "src/ejemplos/planificacion2022.rss"
 ```
 
 ## TODO
-[] - Terminar token de tipo `contenido_texto`. Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
-[] - Probar con archivos .txt
-[] - Probar que exporte archivo .txt cuando se analiza llamando desde terminal (argumento -f).
+[x] - Terminar token de tipo `contenido_texto`. Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
+[x] - Ver `cerrar xml con `?>`.
+
+[x] - Probar con archivos .txt
+[x] - Probar que exporte archivo .txt cuando se analiza llamando desde terminal (argumento -f)
+
+[x] - Cambiar gramatica para contenido texto y hacerla recursiva.
