@@ -20,7 +20,6 @@ tokens = [
     # simbolos
     'comilla',
     'barra',
-    'protocolo',
     'punto',
     'dospuntos',
     'question',
@@ -32,11 +31,7 @@ tokens = [
     'slash',
     
     # Simbolos URL
-    # 'http',
-    # 'https',
-    # 'ftp',
-    # 'ftps',
-    # 'protocolo'
+    'protocolo',
 
     # etiquetas
     'version',
@@ -80,8 +75,7 @@ tokens = [
 # Definición de símbolos atómicos #
 
 # Etiquetas
-
-# def t_version(t): r'version'; return (t)
+def t_xml(t): r'<\?xml\s+version="1\.0"\s+encoding="UTF-8"\s*\?>'; return(t)
 
 def t_category(t): r'<category>'; return (t)
 def t_cerrarcategory(t): r'<\/category>'; return (t)
@@ -100,20 +94,19 @@ def t_cerrartitulo(t): r'<\/title>'; return(t)
 def t_url(t): r'<url>'; return(t)
 def t_cerrarurl(t): r'<\/url\>'; return(t)
 
+def t_rss(t): r'<rss\s*version="2.0"\s*>'; return(t)
+def t_cerrarrss(t): r'<\/rss>'; return(t)
+
 def t_channel(t): r'<channel>'; return(t)
 def t_cerrarchannel(t): r'<\/channel>'; return(t)
 
 def t_item(t): r'<item>'; return(t)
 def t_cerraritem(t): r'<\/item>'; return(t)
 
-def t_rss(t): r'<rss\s*version="2.0"\s*>'; return(t)
-def t_cerrarrss(t): r'<\/rss>'; return(t)
-
 # Protocolos
 def t_protocolo(t): r'(https|http|ftps|ftp):\/\/'; return (t)
 
 # Etiquetas opcionales
-
 def t_height(t): r'<height>'; return(t)
 def t_cerrarheight(t): r'<\/height>'; return(t)
 
@@ -125,10 +118,6 @@ def t_cerrarimage(t): r'<\/image>'; return(t)
 
 def t_copyright(t): r'<copyright>'; return(t)
 def t_cerrarcopyright(t): r'<\/copyright>'; return(t)
-
-
-def t_xml(t): r'<\?xml\s+version="1\.0"\s+encoding="UTF-8"\s*\?>'; return(t)
-# def t_cerrarxml(t): r'\?\>'; return(t)
 
 # Resto
 
@@ -156,7 +145,13 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-t_contenido_texto = r'(.)+(?=<\/\w+>)' # ; return (t)
+# Se agrega condicionalmente una expresion para cuando se ejecuta
+# el lexer desde el modo `normal` (linea por linea)
+expresionFinalParaTextos = ((r'(?=<\/\w+>)') if (not pathFile) else '').strip();
+def t_contenido_texto(t): return (t)
+# No se puede anidar una expresion regular con una variable dentro de la definicion de la funcion,
+# por lo tanto, se lo sobreescribe en el método (propio de PLY) llamado `__doc__`
+t_contenido_texto.__doc__ = fr'(.)+{expresionFinalParaTextos}';
 
 lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
 
