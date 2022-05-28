@@ -50,14 +50,12 @@ tokens = [
     'rss',
     'cerrarrss',
     'xml',
-    # 'cerrarxml',
     'image',
     'cerrarimage',
     'copyright',
     'cerrarcopyright',
     'item',
     'cerraritem',
-    #
     # Texto
     'contenido_texto',
     'digito',
@@ -194,7 +192,8 @@ if __name__ == "__main__":
         else:
             print('(⩗) El lexer ACEPTA este archivo.')
         print('(!) Se exportó un .txt con los tokens analizados.')
-
+    # Si no hay `pathFile` significa 
+    # que no se pasó como argumento a la ruta del archivo a analizar.
     if not pathFile:
         # Ejecución "normal"
         print('Para salir pulse: [ctrl] + [C] | O escriba _salir')
