@@ -3,7 +3,7 @@ import re
 import argparse
 
 # Obtener path de texto por terminal
-argParser = argparse.ArgumentParser(description='Procesa strings a tokens de pseudocodigo.')
+argParser = argparse.ArgumentParser(description='Procesa strings a tokens de RSS.')
 argParser.add_argument('-f', '-pathFile', nargs='?',type=str, help='especificar ruta de archivo de texto de entrada a analizar.')
 argsParser = argParser.parse_args()
 pathFile = argsParser.f
@@ -32,10 +32,11 @@ tokens = [
     'slash',
     
     # Simbolos URL
-    'http',
-    'https',
-    'ftp',
-    'ftps',
+    # 'http',
+    # 'https',
+    # 'ftp',
+    # 'ftps',
+    # 'protocolo'
 
     # etiquetas
     'version',
@@ -45,7 +46,7 @@ tokens = [
     'cerrardescription',
     'link',
     'cerrarlink',
-    'TITULO',
+    'titulo',
     'cerrartitulo',
     'url',
     'cerrarurl',
@@ -54,7 +55,7 @@ tokens = [
     'rss',
     'cerrarrss',
     'xml',
-    'cerrarxml',
+    # 'cerrarxml',
     'image',
     'cerrarimage',
     'copyright',
@@ -62,8 +63,6 @@ tokens = [
     'item',
     'cerraritem',
     #
-    'encoding',
-    'valor_encoding',
     # Texto
     'contenido_texto',
     'digito',
@@ -82,7 +81,7 @@ tokens = [
 
 # Etiquetas
 
-def t_version(t): r'version'; return (t)
+# def t_version(t): r'version'; return (t)
 
 def t_category(t): r'<category>'; return (t)
 def t_cerrarcategory(t): r'<\/category>'; return (t)
@@ -93,7 +92,7 @@ def t_cerrardescription(t): r'<\/description>'; return (t)
 def t_link(t): r'<link>'; return (t)
 def t_cerrarlink(t): r'<\/link>'; return (t)
  
-def t_TITULO(t): 
+def t_titulo(t): 
     r'<title>'
     return t; 
 def t_cerrartitulo(t): r'<\/title>'; return(t)
@@ -107,14 +106,11 @@ def t_cerrarchannel(t): r'<\/channel>'; return(t)
 def t_item(t): r'<item>'; return(t)
 def t_cerraritem(t): r'<\/item>'; return(t)
 
-def t_rss(t): r'<rss'; return(t)
+def t_rss(t): r'<rss\s*version="2.0"\s*>'; return(t)
 def t_cerrarrss(t): r'<\/rss>'; return(t)
 
 # Protocolos
-def t_https(t): r'https'; return(t)
-def t_http(t): r'http'; return(t)
-def t_ftps(t): r'ftps'; return(t)
-def t_ftp(t): r'ftp'; return(t)
+def t_protocolo(t): r'(https|http|ftps|ftp):\/\/'; return (t)
 
 # Etiquetas opcionales
 
@@ -130,14 +126,11 @@ def t_cerrarimage(t): r'<\/image>'; return(t)
 def t_copyright(t): r'<copyright>'; return(t)
 def t_cerrarcopyright(t): r'<\/copyright>'; return(t)
 
-def t_xml(t): r'<\?xml'; return(t)
-def t_cerrarxml(t): r'\?\>'; return(t)
+
+def t_xml(t): r'<\?xml\s+version="1\.0"\s+encoding="UTF-8"\s*\?>'; return(t)
+# def t_cerrarxml(t): r'\?\>'; return(t)
 
 # Resto
-
-def t_encoding(t): r'encoding'; return(t)
-
-def t_UTF8(t): r'utf-8'; return(t) # Está en minúscula p/ que funcione con IGNORECASE #
 
 t_digito = r'\d+'
 t_igualque = r'\='
@@ -163,13 +156,13 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-t_contenido_texto = r'(.)+' # ; return (t)
+t_contenido_texto = r'(.)+(?=<\/\w+>)' # ; return (t)
 
 lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
 
 # Solo si se ejecuta desde lexer.py hacer...
 if __name__ == "__main__":
-    print('Lexer Pseudocodigo | Grupo 1. SSL 2022.')
+    print('Lexer de RSS | Grupo 1. SSL 2022.')
     def analizarTokens(modoEjecucion):
         global contadorErrores
         exportArray = []
