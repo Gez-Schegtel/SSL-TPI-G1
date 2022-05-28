@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>
+			RSS de las clases virtuales
+		</title>
+		<link>
+			https://misclases.live/
+		</link>
+		<description>
+			RSS con las clases virtuales de las materias
+		</description>
+		<category>
+			Educacion
+		</category>
+		<copyright>
+			2022
+		</copyright>
+		<image>
+			<url>
+				https://www.compartirpalabramaestra.org/sites/default/files/styles/articulos/public/field/image/el-aula-vacia.jpg?itok=BoQ5B1_c
+			</url>
+			<title>
+				Aula
+			</title>
+			<link>
+				https://misclases.live/
+			</link>
+			<height>
+				250
+			</height>
+			<width>
+				250
+			</width>
+		</image>
+		<item>
+			<title>
+				Analisis Matematico: Teoria
+			</title>
+			<link>
+				https://us04web.zoom.us/j/999999
+			</link>
+			<description>
+				Clase virtual de AM. Teoria
+			</description>
+			<category>
+				Clase
+			</category>
+		</item>
+		<item>
+			<title>
+				Analisis Matematico: Practico
+			</title>
+			<link>
+				https://us04web.zoom.us/j/999999
+			</link>
+			<description>
+				Clase virtual de AM. Practica.
+			</description>
+			<category>
+				Clase
+			</category>
+		</item>
+	</channel>
+</rss>

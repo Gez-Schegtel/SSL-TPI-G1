@@ -25,10 +25,10 @@ python3 src/lexer.py -f "src/ejemplos/planificacion2022.rss"
 ```
 
 ## TODO
-[x] - Terminar token de tipo `contenido_texto`. Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
-[x] - Ver `cerrar xml con `?>`.
+- [X] Terminar token de tipo `contenido_texto`. Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
+- [X] Ver `cerrar xml con `?>`.
 
-[x] - Probar con archivos .txt
-[x] - Probar que exporte archivo .txt cuando se analiza llamando desde terminal (argumento -f)
+- [X] Probar con archivos .txt
+- [X] Probar que exporte archivo .txt cuando se analiza llamando desde terminal (argumento -f)
 
-[x] - Cambiar gramatica para contenido texto y hacerla recursiva.
+- [X] Cambiar gramatica para contenido texto y hacerla recursiva.
