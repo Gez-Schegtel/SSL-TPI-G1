@@ -8,7 +8,7 @@ Hecho por:
 - Arduña, Agustín.
 - Schefer, Mauricio.
 - Segnana, Juan.
-- Velazco, Juan.
+- Velazco Gez Schegtel, Juan Ignacio.
 
 ## Lexer
 
