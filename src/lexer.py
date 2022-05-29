@@ -1,4 +1,4 @@
-import ply.ply.lex as lex   # lexer -> tokens
+import ply.lex as lex   # lexer -> tokens
 import re
 import argparse
 
@@ -19,16 +19,16 @@ tokens = [
     
     # simbolos
     'comilla',
-    'barra',
     'punto',
     'dospuntos',
     'question',
+    'slash',
+
+    # Opcionales
     'height',
     'cerrarheight',
     'width',
     'cerrarwidth',
-    'UTF8',
-    'slash',
     
     # Simbolos URL
     'protocolo',
@@ -56,7 +56,8 @@ tokens = [
     'cerrarcopyright',
     'item',
     'cerraritem',
-    # Texto
+
+    # Contenido entre etiquetas
     'contenido_texto',
     'digito',
 ]

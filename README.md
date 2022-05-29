@@ -24,6 +24,29 @@ Para correrlo con ejecutable:
 python3 src/lexer.py -f "src/ejemplos/planificacion2022.rss"
 ```
 
+## Generar ejecutables
+
+! Ir a carpeta `src/`
+
+1. Instalar python
+
+
+### Linux / Mac
+
+```bash
+pyinstaller --onefile lexer.py
+
+```
+
+### Windows
+
+2. Instalar pip.
+
+```bash
+python -m PyInstaller --onefile lexer.py
+```
+
+
 ## TODO
 - [X] Terminar token de tipo `contenido_texto`. Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
 - [X] Ver `cerrar xml con `?>`.
