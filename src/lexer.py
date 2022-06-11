@@ -1,4 +1,4 @@
-import ply.ply.lex as lex   # lexer -> tokens
+import ply.lex as lex   # lexer -> tokens
 import re
 
 contadorErrores = 0
