@@ -1,12 +1,5 @@
-import ply.lex as lex   # lexer -> tokens
+import ply.ply.lex as lex   # lexer -> tokens
 import re
-import argparse
-
-# Obtener path de texto por terminal
-argParser = argparse.ArgumentParser(description='Procesa strings a tokens de RSS.')
-argParser.add_argument('-f', '-pathFile', nargs='?',type=str, help='especificar ruta de archivo de texto de entrada a analizar.')
-argsParser = argParser.parse_args()
-pathFile = argsParser.f
 
 contadorErrores = 0
 
@@ -146,18 +139,87 @@ def t_newline(t):
 
 # Se agrega condicionalmente una expresion para cuando se ejecuta
 # el lexer desde el modo `normal` (linea por linea)
-expresionFinalParaTextos = ((r'(?=<\/\w+>)') if (not pathFile) else '').strip();
+expresionTextoArchivo = r'(.)+';
+expresionFinalParaTextos = ((r'(?=<\/\w+>)')).strip();
+expresionTextoTerminal = fr'(.)+{expresionFinalParaTextos}';
 def t_contenido_texto(t): return (t)
 # No se puede anidar una expresion regular con una variable dentro de la definicion de la funcion,
 # por lo tanto, se lo sobreescribe en el método (propio de PLY) llamado `__doc__`
-t_contenido_texto.__doc__ = fr'(.)+{expresionFinalParaTextos}';
+t_contenido_texto.__doc__ = fr'(.)+';
 
-lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
+# Logica para menu
+menu_options = {
+    1: 'Analizar tokens desde un archivo, indicando su ruta.',
+    2: 'Escanear tokens línea por línea.',
+    3: 'Salir.',
+}
 
-# Solo si se ejecuta desde lexer.py hacer...
-if __name__ == "__main__":
-    print('Lexer de RSS | Grupo 1. SSL 2022.')
-    def analizarTokens(modoEjecucion):
+def print_menu():
+    for key in menu_options.keys():
+        print (key, '--', menu_options[key] )
+
+def analizarPorRuta():
+    # Pedir ruta del archivo por input
+    pathFile = input('Ingrese la ruta del archivo a analizar: ')
+    # Remover comillas
+    pathClean = re.sub(
+        r'\'|"',
+        '',
+        pathFile
+    )
+    t_contenido_texto.__doc__ = expresionTextoArchivo
+    lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
+    # Ejecución "analisis de archivo de texto"
+    try:
+        file = open(pathClean,"r",encoding='utf8')
+        strings = file.read()
+        file.close()
+        lexer.input(strings)
+        analizarTokens('archivo', lexer)
+    except IOError:
+        print('Ocurrió un error leyendo archivo:', pathClean)
+
+def analizarPorLinea():
+    t_contenido_texto.__doc__ = expresionTextoTerminal;
+    lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
+    
+    # Ejecución "normal"
+    print('Terminar la ejecución: [ctrl] + [C] | Para volver al menú principal escribir: _salir')
+    while True:
+        s = input('>> ')
+        if s == '_salir': break
+        lexer.input(s)
+        analizarTokens('normal', lexer)
+# Fin logica para menu
+
+# Exportar TOKENS a un .txt 
+def exportarTokens(arrAnalizar):
+    global contadorErrores
+    from datetime import datetime 
+    fileNameExport = f'tokens-analizados-{datetime.now().isoformat()}.txt'
+    with open(fileNameExport, 'w', encoding='UTF8') as f:
+        f.write('TOKEN | VALOR\n')
+        f.write('-------------\n')
+        contador = 0
+        for line in arrAnalizar:
+            contador += 1
+            f.write(f'{contador}- {line[0]}: {line[1]}')
+            f.write('\n')
+        f.write('-------------\n')
+        f.write(f'Total de tokens válidos analizados: {contador}.\n')
+        if (contadorErrores > 0):
+            f.write(f'Total de tokens NO válidos: {contadorErrores}.')
+    f.close()
+    if (contadorErrores > 0):
+        print('(⨉) El lexer NO acepta este archivo.')
+    else:
+        print('(⩗) El lexer ACEPTA este archivo.')
+    print('(!) Se exportó un .txt con los tokens analizados.')
+
+# Se pasa por parametro al lexer ya que,
+# la expresion de `t_contenido_texto` es sobreescribida
+# según el modo de ejecución.
+def analizarTokens(modoEjecucion, lexer):
         global contadorErrores
         exportArray = []
         while True:
@@ -170,46 +232,22 @@ if __name__ == "__main__":
                     exportArray.append([tok.type,tok.value]);
                 else: print(f'Tipo: {tok.type} | Valor: {tok.value}')
 
-    # Exportar TOKENS a un .txt 
-    def exportarTokens(arrAnalizar):
-        global contadorErrores
-        from datetime import datetime 
-        fileNameExport = f'tokens-analizados-{datetime.now().isoformat()}.txt'
-        with open(fileNameExport, 'w', encoding='UTF8') as f:
-            f.write('TOKEN | VALOR\n')
-            f.write('-------------\n')
-            contador = 0
-            for line in arrAnalizar:
-                contador += 1
-                f.write(f'{contador}- {line[0]}: {line[1]}')
-                f.write('\n')
-            f.write('-------------\n')
-            f.write(f'Total de tokens válidos analizados: {contador}.\n')
-            if (contadorErrores > 0):
-                f.write(f'Total de tokens NO válidos: {contadorErrores}.')
-        f.close()
-        if (contadorErrores > 0):
-            print('(⨉) El lexer NO acepta este archivo.')
-        else:
-            print('(⩗) El lexer ACEPTA este archivo.')
-        print('(!) Se exportó un .txt con los tokens analizados.')
-    # Si no hay `pathFile` significa 
-    # que no se pasó como argumento a la ruta del archivo a analizar.
-    if not pathFile:
-        # Ejecución "normal"
-        print('Para salir pulse: [ctrl] + [C] | O escriba _salir')
-        while True:
-            s = input('>> ')
-            if s == '_salir': break
-            lexer.input(s)
-            analizarTokens('normal')
-    else:
-        # Ejecución "analisis de archivo de texto"
+# Solo si se ejecuta desde lexer.py hacer...
+if __name__ == "__main__":
+    print('Lexer de RSS | Grupo 1. SSL 2022.')
+    while(True):
+        print_menu()
+        option = ''
         try:
-            file = open(pathFile,"r",encoding='utf8')
-            strings = file.read()
-            file.close()
-            lexer.input(strings)
-            analizarTokens('archivo')
-        except IOError:
-            print('Ocurrió un error leyendo archivo:', pathFile)
+            option = int(input('Ingrese la opción: '))
+        except:
+            print('Opción inválida. Por favor, ingrese un número ...')
+        if option == 1:
+            analizarPorRuta()
+        elif option == 2:
+            analizarPorLinea()
+        elif option == 3:
+            print('Terminando ejecución...')
+            exit()
+        else:
+            print('Opción incorrecta. Por favor, ingresar un número del 1 al 3.')
