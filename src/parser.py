@@ -1,4 +1,4 @@
-import ply.yacc as yacc # parser 
+import ply.ply.yacc as yacc # parser 
 from lexer import tokens
 import argparse
 
@@ -31,25 +31,13 @@ def p_ET_OBL(p):
     '''
     exportarTxt.append(['Prod. ET_OBL -->', p.slice])
 
-
-# PLANTILLA
-def p_PLANTILLA(p): 
-    '''PLANTILLA : ET_TITLE
-              | ET_LINK 
-              | ET_DESC
-              | ET_CATEGORY
-              | ET_COPYRIGHT 
-              | CONT_IMG
-    '''
-    exportarTxt.append(['Prod. PLANTILLA -->', p.slice])
-
 def p_LAMBDA(p):
     'LAMBDA :'
     pass
 
 # Juani
 def p_ET_TITLE(p): 
-    '''ET_TITLE : titulo contenido_texto cerrartitulo
+    '''ET_TITLE : titulo CONT_TEXTO cerrartitulo
     '''
     exportarTxt.append(['Prod. ET_TITLE -->', p.slice])
 
@@ -65,30 +53,30 @@ def p_ET_URL(p):
     exportarTxt.append(['Prod. ET_URL -->', p.slice])
 
 def p_ET_DESC(p): 
-    '''ET_DESC : description contenido_texto cerrardescription
+    '''ET_DESC : description CONT_TEXTO cerrardescription
     '''
     exportarTxt.append(['Prod. ET_DESC -->', p.slice])
 
 def p_ET_CATEGORY(p): 
-    '''ET_CATEGORY : category contenido_texto cerrarcategory
+    '''ET_CATEGORY : category CONT_TEXTO cerrarcategory
                     | LAMBDA
     '''
     exportarTxt.append(['Prod. ET_CATEGORY -->', p.slice])
 
 def p_ET_COPYRIGHT(p): 
-    '''ET_COPYRIGHT : copyright contenido_texto cerrarcopyright
+    '''ET_COPYRIGHT : copyright CONT_TEXTO cerrarcopyright
                     | LAMBDA
     '''
     exportarTxt.append(['Prod. ET_COPYRIGHT -->', p.slice])
 
-def p_contenido_texto(p): 
-    '''contenido_texto : cadena contenido_texto 
-                | cadena
+def p_CONT_TEXTO(p): 
+    '''CONT_TEXTO : contenido_texto CONT_TEXTO
+                | contenido_texto
     '''
-    exportarTxt.append(['Prod. contenido_texto -->', p.slice])
+    exportarTxt.append(['Prod. CONT_TEXTO -->', p.slice])
 
 def p_CONT_IMG(p): 
-    '''CONT_IMG : ET_IMG_OBL ET_IMG_OPC 
+    '''CONT_IMG : ET_IMG_OBL ET_IMG_OP 
                 | ET_IMG_OBL 
                 | LAMBDA
     '''
@@ -112,38 +100,70 @@ def p_ET_IMG_OP (p):
     '''
     exportarTxt.append(['Prod. ET_IMG_OP  -->', p.slice])
 
-def p_ET_HEIGHT  (p): 
-    '''ET_HEIGHT   : height Numero cerrarheight
+def p_ET_HEIGHT (p): 
+    '''ET_HEIGHT : height digito cerrarheight
     '''
-    exportarTxt.append(['Prod. ET_HEIGHT   -->', p.slice])    
+    exportarTxt.append(['Prod. ET_HEIGHT -->', p.slice])    
 
-def p_ET_WIDTH   (p): 
-    '''ET_WIDTH    : width Numero cerrarwidth
+def p_ET_WIDTH (p):
+    '''ET_WIDTH : width digito cerrarwidth
     '''
-    exportarTxt.append(['Prod. ET_WIDTH    -->', p.slice])    
+    exportarTxt.append(['Prod. ET_WIDTH -->', p.slice]) 
 
 # Juan S
+def p_CONT_LINK(p): 
+    '''CONT_LINK : protocolo DOMINIO_GRAL FINAL_URL
+                 | protocolo DOMINIO_GRAL
+    '''
+    exportarTxt.append(['Prod. CONT_LINK -->', p.slice])
+
+
+def p_FINAL_URL(p): 
+    '''FINAL_URL : slash RUTA numeral LOCALIZADOR
+                 | slash RUTA
+    '''
+    exportarTxt.append(['Prod. CONT_LINK -->', p.slice])
+
+def p_DOMINIO_GRAL(p): 
+    '''DOMINIO_GRAL : DOMINIO dospuntos PUERTO
+                    | DOMINIO
+    '''
+    exportarTxt.append(['Prod. DOMINIO_GRAL -->', p.slice])
+
+def p_LOCALIZADOR(p): 
+    '''LOCALIZADOR : contenido_texto
+    '''
+    exportarTxt.append(['Prod. LOCALIZADOR -->', p.slice])
+
+def p_DOMINIO(p): 
+    '''DOMINIO : contenido_texto
+    '''
+    exportarTxt.append(['Prod. DOMINIO -->', p.slice])
+
+def p_RUTA(p): 
+    '''RUTA : contenido_texto
+    '''
+    exportarTxt.append(['Prod. RUTA -->', p.slice])
+
+def p_PUERTO(p): 
+    '''PUERTO : digito
+    '''
+    exportarTxt.append(['Prod.  -->', p.slice])
 
 # Mauri
-# ITEM_REC
 def p_ITEM_REC(p): 
-    '''ITEM_REC : ET_ITEM ITEM_REC
-                | ET_ITEM
+    '''ITEM_REC : ET_OBL_ITEM ITEM_REC
+                | ET_OBL_ITEM
     '''
     exportarTxt.append(['Prod. ITEM_REC -->', p.slice])
 
+# def p_ET_ITEM(p): 
+#     '''ET_ITEM : ET_OBL_ITEM
+#     '''
+#     exportarTxt.append(['Prod. ET_ ITEM -->', p.slice])
 
-    # ET_ITEM
-def p_ET_ITEM(p): 
-    '''ET_ITEM: ET_OBL_ITEM
-
-    '''
-    exportarTxt.append(['Prod. ET_ ITEM -->', p.slice])
-
-
-    # ET_OBL_ITEM
-def ET_OBL_ITEM(p): 
-    '''ET_REC : ET_TITLE ET_DESC ET_LINK ET_CATEGORY 
+def p_ET_OBL_ITEM(p): 
+    '''ET_OBL_ITEM : ET_TITLE ET_DESC ET_LINK ET_CATEGORY 
                 | ET_TITLE ET_DESC ET_CATEGORY ET_LINK
                 | ET_TITLE  ET_CATEGORY  ET_DESC ET_LINK
                 | ET_TITLE  ET_CATEGORY  ET_LINK ET_DESC
@@ -152,38 +172,23 @@ def ET_OBL_ITEM(p):
                 | ET_DESC  ET_TITLE ET_LINK ET_CATEGORY 
                 | ET_DESC  ET_TITLE ET_CATEGORY ET_LINK 
                 | ET_DESC ET_CATEGORY ET_TITLE ET_LINK 
-                | ET_DESC ET_CATEGORY ET_LINK  ET_TITLE 
-                | ET_DESC ET_LINK ET_CATEGORY  ET_TITLE
+                | ET_DESC ET_CATEGORY ET_LINK ET_TITLE 
+                | ET_DESC ET_LINK ET_CATEGORY ET_TITLE
                 | ET_DESC ET_LINK  ET_TITLE ET_CATEGORY
                 | ET_CATEGORY ET_DESC ET_TITLE ET_LINK 
                 | ET_CATEGORY ET_TITLE ET_DESC  ET_LINK 
                 | ET_CATEGORY ET_DESC  ET_LINK ET_TITLE 
                 | ET_CATEGORY ET_LINK ET_TITLE ET_DESC  
                 | ET_CATEGORY ET_LINK ET_DESC ET_TITLE 
-                | ET_CATEGORY ET_DESC ET_LINK ET_TITLE 
                 | ET_LINK ET_CATEGORY ET_TITLE ET_DESC 
                 | ET_LINK ET_CATEGORY ET_DESC ET_TITLE 
                 | ET_LINK ET_TITLE ET_DESC ET_CATEGORY 
-                | ET_LINK ET_TITLE  ET_CATEGORY ET_DESC 
+                | ET_LINK ET_TITLE ET_CATEGORY ET_DESC 
                 | ET_LINK ET_DESC ET_CATEGORY ET_TITLE 
                 | ET_LINK ET_DESC ET_TITLE ET_CATEGORY
     '''
     exportarTxt.append(['Prod. ET_OBL_ITEM -->', p.slice])
 
-
-# 
-# def p_t_op_aritmetico (p):
-#     '''
-#         t_op_aritmetico : SUMA
-#                         | RESTA
-#                         | DIVISION
-#                         | MULTIPLICACION
-#                         | DIVISION_ENTERA
-#                         | MODULO
-#                         | POTENCIA
-#     '''
-#     exportarTxt.append(['Prod. t_op_aritmetico -->', p.slice])
-    
 def p_error (p):
     # p regresa como un objeto del Lexer.
     # p.__dict__ -> ver propiedades del objeto.
@@ -197,7 +202,8 @@ def p_error (p):
         exportarTxt.append(['Error parser --> ??'])
     contadorErrores += 1
 
-parser = yacc.yacc(errorlog=yacc.NullLogger()) # Ignorar warnings.
+parser = yacc.yacc() # Ignorar warnings.
+# errorlog=yacc.NullLogger()
 
 # def exportarHtml (arregloHtml):
 
@@ -234,7 +240,7 @@ parser = yacc.yacc(errorlog=yacc.NullLogger()) # Ignorar warnings.
 print('Parser RSS | Grupo 1. SSL 2022.')
 if not pathFile:
     # Ejecución "normal"
-    print('Para salir pulse: [ctrl] + [C] | O escriba _salir')
+    print('Para interrumpir la ejecucion: [ctrl] + [C] | Para volver al menu principal: _salir')
     while True:
         s = input('>> ')
         if s == '_salir': break

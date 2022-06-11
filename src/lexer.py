@@ -1,4 +1,4 @@
-import ply.lex as lex   # lexer -> tokens
+import ply.ply.lex as lex   # lexer -> tokens
 import re
 
 contadorErrores = 0
@@ -53,6 +53,7 @@ tokens = [
     # Contenido entre etiquetas
     'contenido_texto',
     'digito',
+    'numeral',
 ]
 
 # PLY detecta variables que empiecen con 't_'
@@ -122,6 +123,7 @@ t_comilla = r'\"|\”'
 t_question = r'\?'
 t_slash = r'\/'
 t_punto = r'\.'
+t_numeral = r'\#'
 
 # PLY ignorará espacios, saltos de lineas y tabs.
 t_ignore = ' \t'
