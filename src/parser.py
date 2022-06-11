@@ -1,12 +1,7 @@
+from logicaMenu import logicaMenu
+from helpers import pedirRuta
 import ply.ply.yacc as yacc # parser 
 from lexer import tokens
-import argparse
-
-#Obtener path de texto por terminal
-argParser = argparse.ArgumentParser(description='Procesa tokens de RSS.')
-argParser.add_argument('-f', '-pathFile', nargs='?',type=str, help='especificar ruta de archivo de texto de entrada a analizar.')
-argsParser = argParser.parse_args()
-pathFile = argsParser.f
 
 exportarTxt = list()
 contadorErrores = 0
@@ -157,11 +152,6 @@ def p_ITEM_REC(p):
     '''
     exportarTxt.append(['Prod. ITEM_REC -->', p.slice])
 
-# def p_ET_ITEM(p): 
-#     '''ET_ITEM : ET_OBL_ITEM
-#     '''
-#     exportarTxt.append(['Prod. ET_ ITEM -->', p.slice])
-
 def p_ET_OBL_ITEM(p): 
     '''ET_OBL_ITEM : ET_TITLE ET_DESC ET_LINK ET_CATEGORY 
                 | ET_TITLE ET_DESC ET_CATEGORY ET_LINK
@@ -205,51 +195,17 @@ def p_error (p):
 parser = yacc.yacc() # Ignorar warnings.
 # errorlog=yacc.NullLogger()
 
-# def exportarHtml (arregloHtml):
+opcionesMenu = {
+    1: 'Analizar texto desde un archivo, indicando su ruta.',
+    2: 'Escanear texto línea por línea (escribiendo en terminal).',
+    3: 'Salir.',
+}
 
-#     nombre = pathFile
-#     nombre = nombre.replace('.rss', '')
-    
-#     nombreRecortado = ''
-#     if nombre.__contains__('/'):
-#         nombreRecortado = nombre.split('/')[-1]
-#     elif nombre.__contains__('\\'):
-#         nombreRecortado = nombre.split('\\')[-1]
-#     else: nombreRecortado = nombre;
-
-#     base = [
-#         f'''<!DOCTYPE html>\n<html>\n<head>\n\t<meta charset="utf-8">\n\t<title>{nombreRecortado}</title>\n</head>\n<body>'''
-#     ]
-#
-#     for line in arregloHtml:
-#         line[1] = line[1].strip()
-#         if line[0] == 'encabezado':
-#             base.append('\n\t<h2>'+line[1]+'</h2>')
-#         if line[0] == 'linea':
-#             base.append('\n\t<p>'+line[1]+'</p>')
-#         if line[0] == 'bloque':
-#             base.append('\n\t<h4>'+line[1]+'</h4>')
-
-#     base.append('\n</body>\n</html>')
-#     with open(f'{nombre}.html', 'w', encoding='UTF8') as f:
-#         for line in base:
-#             f.write(line)
-#     f.close()
-# # fin de función exportar
-
-print('Parser RSS | Grupo 1. SSL 2022.')
-if not pathFile:
-    # Ejecución "normal"
-    print('Para interrumpir la ejecucion: [ctrl] + [C] | Para volver al menu principal: _salir')
-    while True:
-        s = input('>> ')
-        if s == '_salir': break
-        result = parser.parse(s)
-        print(result)
-else:
+def analizarPorRuta():
+    cleanPath = pedirRuta()
     # Ejecución "analisis de archivo de texto"
     try:
-        file = open(pathFile,"r",encoding='utf8')
+        file = open(cleanPath, "r",encoding='utf8')
         strings = file.read()
         file.close()
         result = parser.parse(strings)
@@ -273,5 +229,23 @@ else:
             # print('(⩗) Sintácticamente correcto. Se exportó un .html con los comentarios.')
         print('(!) Se exportó un .txt con las producciones analizadas.')
     except IOError:
-        print('Ocurrió un error leyendo archivo:', pathFile)
+        print('Ocurrió un error leyendo archivo:', cleanPath)
+
+
+def analizarPorLinea():
+    # Ejecución "normal"
+    print('Para interrumpir la ejecucion: [ctrl] + [C] | Para volver al menu principal: _salir')
+    while True:
+        s = input('>> ')
+        if s == '_salir': break
+        result = parser.parse(s)
+        print(result)
+
+if __name__ == "__main__":
+    logicaMenu(
+        'Parser',
+        opcionesMenu,
+        analizarPorRuta,
+        analizarPorLinea,
+    )
         

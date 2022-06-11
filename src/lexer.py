@@ -1,5 +1,7 @@
 import ply.ply.lex as lex   # lexer -> tokens
 import re
+from logicaMenu import cls, logicaMenu
+from helpers import pedirRuta
 
 contadorErrores = 0
 
@@ -139,8 +141,6 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# Se agrega condicionalmente una expresion para cuando se ejecuta
-# el lexer desde el modo `normal` (linea por linea)
 expresionTextoArchivo = r'(.)+';
 expresionFinalParaTextos = ((r'(?=<\/\w+>)')).strip();
 expresionTextoTerminal = fr'(.)+{expresionFinalParaTextos}';
@@ -156,19 +156,8 @@ menu_options = {
     3: 'Salir.',
 }
 
-def print_menu():
-    for key in menu_options.keys():
-        print (key, '--', menu_options[key] )
-
 def analizarPorRuta():
-    # Pedir ruta del archivo por input
-    pathFile = input('Ingrese la ruta del archivo a analizar: ')
-    # Remover comillas
-    pathClean = re.sub(
-        r'\'|"',
-        '',
-        pathFile
-    )
+    pathClean = pedirRuta()
     t_contenido_texto.__doc__ = expresionTextoArchivo
     lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
     # Ejecución "analisis de archivo de texto"
@@ -189,7 +178,9 @@ def analizarPorLinea():
     print('Terminar la ejecución: [ctrl] + [C] | Para volver al menú principal escribir: _salir')
     while True:
         s = input('>> ')
-        if s == '_salir': break
+        if s == '_salir': 
+            cls()
+            break;
         lexer.input(s)
         analizarTokens('normal', lexer)
 # Fin logica para menu
@@ -218,8 +209,8 @@ def exportarTokens(arrAnalizar):
         print('(⩗) El lexer ACEPTA este archivo.')
     print('(!) Se exportó un .txt con los tokens analizados.')
 
-# Se pasa por parametro al lexer ya que,
-# la expresion de `t_contenido_texto` es sobreescribida
+# Se pasa como argumento al objeto lexer ya que,
+# la expresion de `t_contenido_texto` debe ser sobreescribida
 # según el modo de ejecución.
 def analizarTokens(modoEjecucion, lexer):
         global contadorErrores
@@ -236,20 +227,11 @@ def analizarTokens(modoEjecucion, lexer):
 
 # Solo si se ejecuta desde lexer.py hacer...
 if __name__ == "__main__":
-    print('Lexer de RSS | Grupo 1. SSL 2022.')
-    while(True):
-        print_menu()
-        option = ''
-        try:
-            option = int(input('Ingrese la opción: '))
-        except:
-            print('Opción inválida. Por favor, ingrese un número ...')
-        if option == 1:
-            analizarPorRuta()
-        elif option == 2:
-            analizarPorLinea()
-        elif option == 3:
-            print('Terminando ejecución...')
-            exit()
-        else:
-            print('Opción incorrecta. Por favor, ingresar un número del 1 al 3.')
+    logicaMenu(
+        'Lexer',
+        menu_options,
+        analizarPorRuta,
+        analizarPorLinea,
+    )
+else:
+    lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula

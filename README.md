@@ -46,12 +46,12 @@ pyinstaller --onefile lexer.py
 python -m PyInstaller --onefile lexer.py
 ```
 
+## Graph
 
-## TODO
-- [X] Terminar token de tipo `contenido_texto`. Hay que buscar que matchee todo menos las etiquetas `(<\w+> y <\/\w+>)`.
-- [X] Ver `cerrar xml con `?>`.
-
-- [X] Probar con archivos .txt
-- [X] Probar que exporte archivo .txt cuando se analiza llamando desde terminal (argumento -f)
-
-- [X] Cambiar gramatica para contenido texto y hacerla recursiva.
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
