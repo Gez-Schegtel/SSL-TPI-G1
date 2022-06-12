@@ -234,4 +234,6 @@ if __name__ == "__main__":
         analizarPorLinea,
     )
 else:
+    # Se exporta al `lexer` para que pueda ser ocupado desde, 
+    # por ejemplo, el parser.
     lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
