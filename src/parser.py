@@ -36,8 +36,6 @@ def p_LAMBDA(p):
     'LAMBDA :'
     pass
 
-# Juani
-
 
 def p_ET_TITLE(p):
     '''ET_TITLE : titulo CONT_TEXTO cerrartitulo
@@ -97,8 +95,6 @@ def p_CONT_IMG(p):
     '''
     exportarTxt.append(['Prod. CONT_IMG -->', p.slice])
 
-# Agus
-
 
 def p_ET_IMG_OBL(p):
     '''ET_IMG_OBL  : ET_TITLE ET_LINK ET_URL
@@ -144,7 +140,7 @@ def p_ET_WIDTH(p):
                 | width contenido_texto cerrarwidth
     '''
     global contadorErrores
-    
+
     # Posicion 2 = Valor de la etiqueta width
     widthValue = int(p[2])
     WIDTH_LIMIT = 144
@@ -157,8 +153,6 @@ def p_ET_WIDTH(p):
         print('Linea:', p.lineno(2))
         contadorErrores += 1
     exportarTxt.append(['Prod. ET_WIDTH -->', p.slice])
-
-# Juan S
 
 
 def p_CONT_LINK(p):
@@ -205,8 +199,6 @@ def p_PUERTO(p):
               | contenido_texto
     '''
     exportarTxt.append(['Prod.  -->', p.slice])
-
-# Mauri
 
 
 def p_ITEM_REC(p):
@@ -299,9 +291,9 @@ def analizarPorRuta():
         else:
             print('✅ El archivo es sintacticamente correcto!')
         # Resetear contador
-        contadorErrores = 0;            
-            # exportarHtml(arregloHtml)
-            # print('(⩗) Sintácticamente correcto. Se exportó un .html con los comentarios.')
+        contadorErrores = 0
+        # exportarHtml(arregloHtml)
+        # print('(⩗) Sintácticamente correcto. Se exportó un .html con los comentarios.')
         print('(!) Se exportó un .txt con las producciones analizadas.')
     except IOError:
         print('Ocurrió un error leyendo archivo:', cleanPath)
