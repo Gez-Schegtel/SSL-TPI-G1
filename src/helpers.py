@@ -12,7 +12,7 @@ def pedirRuta():
   return pathClean.strip()
 
 # todo
-# def exportarHtml (arregloHtml):
+# def exportarHtml (pathFile, arregloHtml):
 
 #     nombre = pathFile
 #     nombre = nombre.replace('.rss', '')
@@ -30,7 +30,7 @@ def pedirRuta():
 #
 #     for line in arregloHtml:
 #         line[1] = line[1].strip()
-#         if line[0] == 'encabezado':
+#         if line[0] == 'titulo':
 #             base.append('\n\t<h2>'+line[1]+'</h2>')
 #         if line[0] == 'linea':
 #             base.append('\n\t<p>'+line[1]+'</p>')

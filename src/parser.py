@@ -290,9 +290,11 @@ def analizarPorRuta():
             print('(⨉) Ocurrió un error sintáctico.')
         else:
             print('✅ El archivo es sintacticamente correcto!')
+            # Ejecutar exportacion de html
+            # TODO
+            # exportarHtml(cleanPath, arregloHtml)
         # Resetear contador
         contadorErrores = 0
-        # exportarHtml(arregloHtml)
         # print('(⩗) Sintácticamente correcto. Se exportó un .html con los comentarios.')
         print('(!) Se exportó un .txt con las producciones analizadas.')
     except IOError:
