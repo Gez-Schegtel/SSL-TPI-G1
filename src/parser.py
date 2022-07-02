@@ -1,5 +1,6 @@
 from logicaMenu import logicaMenu
 from helpers import pedirRuta
+from obtenerHtml import exportarHtml
 import ply.ply.yacc as yacc  # parser
 from lexer import tokens
 
@@ -291,11 +292,10 @@ def analizarPorRuta():
         else:
             print('✅ El archivo es sintacticamente correcto!')
             # Ejecutar exportacion de html
-            # TODO
-            # exportarHtml(cleanPath, arregloHtml)
+            exportarHtml(strings, cleanPath)
         # Resetear contador
         contadorErrores = 0
-        # print('(⩗) Sintácticamente correcto. Se exportó un .html con los comentarios.')
+        print('(⩗) Sintácticamente correcto. Se exportó un .html con los comentarios.')
         print('(!) Se exportó un .txt con las producciones analizadas.')
     except IOError:
         print('Ocurrió un error leyendo archivo:', cleanPath)
