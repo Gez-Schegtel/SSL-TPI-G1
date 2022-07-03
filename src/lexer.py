@@ -1,4 +1,4 @@
-import ply.ply.lex as lex   # lexer -> tokens
+import ply.lex as lex   # lexer -> tokens
 import re
 from logicaMenu import cls, logicaMenu
 from helpers import pedirRuta

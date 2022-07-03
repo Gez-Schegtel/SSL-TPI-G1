@@ -2,7 +2,7 @@ from logicaMenu import logicaMenu
 from helpers import pedirRuta
 from obtenerHtml import exportarHtml
 
-import ply.ply.yacc as yacc  # parser
+import ply.yacc as yacc  # parser
 # Importar lexer para luego reiniciarlo (para no guardar su estado anterior)
 import lexer
 from lexer import tokens
