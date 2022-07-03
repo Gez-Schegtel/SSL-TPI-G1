@@ -1,14 +1,18 @@
 from logicaMenu import logicaMenu
 from helpers import pedirRuta
 from obtenerHtml import exportarHtml
-import ply.yacc as yacc  # parser
+
+import ply.ply.yacc as yacc  # parser
+# Importar lexer para luego reiniciarlo (para no guardar su estado anterior)
+import lexer
 from lexer import tokens
+
+from importlib import reload  
 
 exportarTxt = list()
 contadorErrores = 0
 
 # Mayusculas = No Terminales; Minusculas = Terminales
-
 
 def p_SIGMA(p):
     ''' SIGMA : xml RSS '''
@@ -131,6 +135,7 @@ def p_ET_HEIGHT(p):
         p[2] = 0
     elif (heightValue > HEIGHT_LIMIT):
         print('Superó el limite de', HEIGHT_LIMIT, 'en HEIGHT')
+        # 2 es `digito` o `contenido_texto`
         print('Linea:', p.lineno(2))
         contadorErrores += 1
     exportarTxt.append(['Prod. ET_HEIGHT -->', p.slice])
@@ -208,7 +213,6 @@ def p_ITEM_REC(p):
     '''
     exportarTxt.append(['Prod. ITEM_REC -->', p.slice])
 
-
 def p_ET_ITEM(p):
     '''ET_ITEM : item ET_OBL_ITEM cerraritem
     '''
@@ -252,9 +256,9 @@ def p_error(p):
         print('Error sintáctico en LINEA:', p.lineno)
         exportarTxt.append(['Error parser -->', p])
     else:
-        exportarTxt.append(['Error parser --> falta `cerrarrss`'])
+        exportarTxt.append(['Error parser --> falta `cerrarrss`', None])
+    
     contadorErrores += 1
-
 
 parser = yacc.yacc()  # Ignorar warnings.
 # errorlog=yacc.NullLogger()
@@ -264,7 +268,6 @@ opcionesMenu = {
     2: 'Escanear texto línea por línea (escribiendo en terminal).',
     3: 'Salir.',
 }
-
 
 def analizarPorRuta():
     cleanPath = pedirRuta()
@@ -291,6 +294,7 @@ def analizarPorRuta():
             print('(⨉) Ocurrió un error sintáctico.')
             # Resetear contador
             contadorErrores = 0
+            reload(lexer)
         else:
             print('✅ El archivo es sintacticamente correcto!')
             # Ejecutar exportacion de html

@@ -26,8 +26,11 @@ def exportarHtml(fileContent, pathFile):
 
   matches = re.findall(itemsTitlesAndDescriptionExpr, fileContent)
   for match in matches:
-    itemTitle = f'<h3>{match[1].strip()}</h3>'
-    itemDescription = f'<p>{match[3].strip()}</p>'
+    titleIndex = 1 if match[1].strip() else 6
+    itemTitle = f'<h3>{match[titleIndex].strip()}</h3>'
+    
+    descriptionIndex = 3 if (match[1].strip()) else 4
+    itemDescription = f'<p>{match[descriptionIndex].strip()}</p>'
     contentArr.extend([itemTitle, itemDescription])
   
   contentArr.append('\n</body>\n</html>')

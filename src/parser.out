@@ -1,15 +1,5 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    comilla
-    igualque
-    mayorque
-    menorque
-    punto
-    question
-    version
-
 Grammar
 
 Rule 0     S' -> SIGMA
@@ -100,7 +90,6 @@ cerrartitulo         : 6
 cerrarurl            : 8
 cerrarwidth          : 32 33
 channel              : 3
-comilla              : 
 contenido_texto      : 14 15 31 33 40 41 42 44
 copyright            : 12
 description          : 9
@@ -108,21 +97,15 @@ digito               : 30 32 43
 dospuntos            : 38
 error                : 
 height               : 30 31
-igualque             : 
 image                : 16
 item                 : 47
 link                 : 7
-mayorque             : 
-menorque             : 
 numeral              : 36
 protocolo            : 34 35
-punto                : 
-question             : 
 rss                  : 2
 slash                : 36 37
 titulo               : 6
 url                  : 8
-version              : 
 width                : 32 33
 xml                  : 1
 

@@ -1,4 +1,4 @@
-import ply.lex as lex   # lexer -> tokens
+import ply.ply.lex as lex   # lexer -> tokens
 import re
 from logicaMenu import cls, logicaMenu
 from helpers import pedirRuta
@@ -7,16 +7,8 @@ contadorErrores = 0
 
 # Terminales
 tokens = [
-    # operadores
-    'menorque',
-    'mayorque',
-    'igualque',
-
     # simbolos
-    'comilla',
-    'punto',
     'dospuntos',
-    'question',
     'slash',
 
     # Opcionales
@@ -29,7 +21,6 @@ tokens = [
     'protocolo',
 
     # etiquetas
-    'version',
     'category',
     'cerrarcategory',
     'description',
@@ -115,16 +106,9 @@ def t_copyright(t): r'<copyright>'; return(t)
 def t_cerrarcopyright(t): r'<\/copyright>'; return(t)
 
 # Resto
-
 t_digito = r'\d+'
-t_igualque = r'\='
-t_menorque = r'\<'
-t_mayorque = r'\>'
 t_dospuntos = r'\:'
-t_comilla = r'\"|\”'
-t_question = r'\?'
 t_slash = r'\/'
-t_punto = r'\.'
 t_numeral = r'\#'
 
 # PLY ignorará espacios, saltos de lineas y tabs.
@@ -141,13 +125,7 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-expresionTextoArchivo = r'(.)+';
-expresionFinalParaTextos = ((r'(?=<\/\w+>)')).strip();
-expresionTextoTerminal = fr'(.)+{expresionFinalParaTextos}';
-def t_contenido_texto(t): return (t)
-# No se puede anidar una expresion regular con una variable dentro de la definicion de la funcion,
-# por lo tanto, se lo sobreescribe en el método (propio de PLY) llamado `__doc__`
-t_contenido_texto.__doc__ = fr'(.)+';
+def t_contenido_texto(t): r'([\w\W])+?(?=<\/)'; return (t)
 
 # Logica para menu
 menu_options = {
@@ -158,7 +136,6 @@ menu_options = {
 
 def analizarPorRuta():
     pathClean = pedirRuta()
-    t_contenido_texto.__doc__ = expresionTextoArchivo
     lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
     # Ejecución "analisis de archivo de texto"
     try:
@@ -171,7 +148,6 @@ def analizarPorRuta():
         print('Ocurrió un error leyendo archivo:', pathClean)
 
 def analizarPorLinea():
-    t_contenido_texto.__doc__ = expresionTextoTerminal;
     lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
 
     # Ejecución "normal"
