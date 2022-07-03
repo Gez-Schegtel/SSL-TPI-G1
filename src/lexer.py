@@ -1,4 +1,4 @@
-import ply.ply.lex as lex   # lexer -> tokens
+import ply.lex as lex   # lexer -> tokens
 import re
 from logicaMenu import cls, logicaMenu
 from helpers import pedirRuta
@@ -11,7 +11,7 @@ tokens = [
     'menorque',
     'mayorque',
     'igualque',
-    
+
     # simbolos
     'comilla',
     'punto',
@@ -24,7 +24,7 @@ tokens = [
     'cerrarheight',
     'width',
     'cerrarwidth',
-    
+
     # Simbolos URL
     'protocolo',
 
@@ -59,14 +59,14 @@ tokens = [
 ]
 
 # PLY detecta variables que empiecen con 't_'
-# Terminos: 
+# Terminos:
 # w = letras o numeros
 # s = todo lo que sea espacios.
 # S = contrario a 's'.
 # d = digitos.
 # * = 0 o más.
 # + = 1 o más.
-    
+
 # Definición de símbolos atómicos #
 
 # Etiquetas
@@ -80,10 +80,8 @@ def t_cerrardescription(t): r'<\/description>'; return (t)
 
 def t_link(t): r'<link>'; return (t)
 def t_cerrarlink(t): r'<\/link>'; return (t)
- 
-def t_titulo(t): 
-    r'<title>'
-    return t; 
+
+def t_titulo(t): r'<title>' return t;
 def t_cerrartitulo(t): r'<\/title>'; return(t)
 
 def t_url(t): r'<url>'; return(t)
@@ -99,7 +97,7 @@ def t_item(t): r'<item>'; return(t)
 def t_cerraritem(t): r'<\/item>'; return(t)
 
 # Protocolos
-def t_protocolo(t): r'(https|http|ftps|ftp):\/\/'; return (t)
+def t_protocolo(t): r'(https|http|fttps|ftp):\/\/'; return (t)
 
 # Etiquetas opcionales
 def t_height(t): r'<height>'; return(t)
@@ -121,7 +119,7 @@ t_igualque = r'\='
 t_menorque = r'\<'
 t_mayorque = r'\>'
 t_dospuntos = r'\:'
-t_comilla = r'\"|\”' 
+t_comilla = r'\"|\”'
 t_question = r'\?'
 t_slash = r'\/'
 t_punto = r'\.'
@@ -173,22 +171,22 @@ def analizarPorRuta():
 def analizarPorLinea():
     t_contenido_texto.__doc__ = expresionTextoTerminal;
     lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
-    
+
     # Ejecución "normal"
     print('Terminar la ejecución: [ctrl] + [C] | Para volver al menú principal escribir: _salir')
     while True:
         s = input('>> ')
-        if s == '_salir': 
+        if s == '_salir':
             cls()
             break;
         lexer.input(s)
         analizarTokens('normal', lexer)
 # Fin logica para menu
 
-# Exportar TOKENS a un .txt 
+# Exportar TOKENS a un .txt
 def exportarTokens(arrAnalizar):
     global contadorErrores
-    from datetime import datetime 
+    from datetime import datetime
     fileNameExport = f'tokens-analizados-{datetime.now().isoformat()}.txt'
     with open(fileNameExport, 'w', encoding='UTF8') as f:
         f.write('TOKEN | VALOR\n')
@@ -206,7 +204,7 @@ def exportarTokens(arrAnalizar):
     if (contadorErrores > 0):
         print('(⨉) El lexer NO acepta este archivo.')
     else:
-        print('(⩗) El lexer ACEPTA este archivo.')
+        print('(✅) El lexer ACEPTA este archivo.')
     print('(!) Se exportó un .txt con los tokens analizados.')
 
 # Se pasa como argumento al objeto lexer ya que,
@@ -234,6 +232,6 @@ if __name__ == "__main__":
         analizarPorLinea,
     )
 else:
-    # Se exporta al `lexer` para que pueda ser ocupado desde, 
+    # Se exporta al `lexer` para que pueda ser ocupado desde,
     # por ejemplo, el parser.
     lexer = lex.lex(reflags=re.IGNORECASE) # Bandera para que ignore mayuscula/minuscula
