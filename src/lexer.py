@@ -81,7 +81,9 @@ def t_cerrardescription(t): r'<\/description>'; return (t)
 def t_link(t): r'<link>'; return (t)
 def t_cerrarlink(t): r'<\/link>'; return (t)
 
-def t_titulo(t): r'<title>' return t;
+def t_titulo(t):
+    r'<title>'
+    return t;
 def t_cerrartitulo(t): r'<\/title>'; return(t)
 
 def t_url(t): r'<url>'; return(t)
@@ -97,7 +99,7 @@ def t_item(t): r'<item>'; return(t)
 def t_cerraritem(t): r'<\/item>'; return(t)
 
 # Protocolos
-def t_protocolo(t): r'(https|http|fttps|ftp):\/\/'; return (t)
+def t_protocolo(t): r'(https|http|ftps|ftp):\/\/'; return (t)
 
 # Etiquetas opcionales
 def t_height(t): r'<height>'; return(t)
