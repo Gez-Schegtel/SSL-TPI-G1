@@ -1,7 +1,7 @@
 from logicaMenu import logicaMenu
 from helpers import pedirRuta
 from obtenerHtml import exportarHtml
-import ply.ply.yacc as yacc  # parser
+import ply.yacc as yacc  # parser
 from lexer import tokens
 
 exportarTxt = list()
@@ -91,7 +91,7 @@ def p_ET_IMG(p):
 
 
 def p_CONT_IMG(p):
-    '''CONT_IMG : ET_IMG_OBL ET_IMG_OP 
+    '''CONT_IMG : ET_IMG_OBL ET_IMG_OP
                 | ET_IMG_OBL
     '''
     exportarTxt.append(['Prod. CONT_IMG -->', p.slice])
@@ -111,7 +111,7 @@ def p_ET_IMG_OBL(p):
 def p_ET_IMG_OP(p):
     '''ET_IMG_OP  : ET_HEIGHT ET_IMG_OP
                   | ET_WIDTH ET_IMG_OP
-                  | ET_HEIGHT 
+                  | ET_HEIGHT
                   | ET_WIDTH
     '''
     exportarTxt.append(['Prod. ET_IMG_OP  -->', p.slice])
@@ -216,28 +216,28 @@ def p_ET_ITEM(p):
 
 
 def p_ET_OBL_ITEM(p):
-    '''ET_OBL_ITEM : ET_TITLE ET_DESC ET_LINK ET_CATEGORY 
+    '''ET_OBL_ITEM : ET_TITLE ET_DESC ET_LINK ET_CATEGORY
                 | ET_TITLE ET_DESC ET_CATEGORY ET_LINK
                 | ET_TITLE  ET_CATEGORY  ET_DESC ET_LINK
                 | ET_TITLE  ET_CATEGORY  ET_LINK ET_DESC
                 | ET_TITLE ET_LINK ET_CATEGORY  ET_DESC
                 | ET_TITLE ET_LINK  ET_DESC ET_CATEGORY
-                | ET_DESC  ET_TITLE ET_LINK ET_CATEGORY 
-                | ET_DESC  ET_TITLE ET_CATEGORY ET_LINK 
-                | ET_DESC ET_CATEGORY ET_TITLE ET_LINK 
-                | ET_DESC ET_CATEGORY ET_LINK ET_TITLE 
+                | ET_DESC  ET_TITLE ET_LINK ET_CATEGORY
+                | ET_DESC  ET_TITLE ET_CATEGORY ET_LINK
+                | ET_DESC ET_CATEGORY ET_TITLE ET_LINK
+                | ET_DESC ET_CATEGORY ET_LINK ET_TITLE
                 | ET_DESC ET_LINK ET_CATEGORY ET_TITLE
                 | ET_DESC ET_LINK  ET_TITLE ET_CATEGORY
-                | ET_CATEGORY ET_DESC ET_TITLE ET_LINK 
-                | ET_CATEGORY ET_TITLE ET_DESC  ET_LINK 
-                | ET_CATEGORY ET_DESC  ET_LINK ET_TITLE 
-                | ET_CATEGORY ET_LINK ET_TITLE ET_DESC  
-                | ET_CATEGORY ET_LINK ET_DESC ET_TITLE 
-                | ET_LINK ET_CATEGORY ET_TITLE ET_DESC 
-                | ET_LINK ET_CATEGORY ET_DESC ET_TITLE 
-                | ET_LINK ET_TITLE ET_DESC ET_CATEGORY 
-                | ET_LINK ET_TITLE ET_CATEGORY ET_DESC 
-                | ET_LINK ET_DESC ET_CATEGORY ET_TITLE 
+                | ET_CATEGORY ET_DESC ET_TITLE ET_LINK
+                | ET_CATEGORY ET_TITLE ET_DESC  ET_LINK
+                | ET_CATEGORY ET_DESC  ET_LINK ET_TITLE
+                | ET_CATEGORY ET_LINK ET_TITLE ET_DESC
+                | ET_CATEGORY ET_LINK ET_DESC ET_TITLE
+                | ET_LINK ET_CATEGORY ET_TITLE ET_DESC
+                | ET_LINK ET_CATEGORY ET_DESC ET_TITLE
+                | ET_LINK ET_TITLE ET_DESC ET_CATEGORY
+                | ET_LINK ET_TITLE ET_CATEGORY ET_DESC
+                | ET_LINK ET_DESC ET_CATEGORY ET_TITLE
                 | ET_LINK ET_DESC ET_TITLE ET_CATEGORY
     '''
     exportarTxt.append(['Prod. ET_OBL_ITEM -->', p.slice])
@@ -289,14 +289,14 @@ def analizarPorRuta():
         f.close()
         if contadorErrores > 0:
             print('(⨉) Ocurrió un error sintáctico.')
+            # Resetear contador
+            contadorErrores = 0
         else:
             print('✅ El archivo es sintacticamente correcto!')
             # Ejecutar exportacion de html
             exportarHtml(strings, cleanPath)
-        # Resetear contador
-        contadorErrores = 0
-        print('(⩗) Sintácticamente correcto. Se exportó un .html con los comentarios.')
-        print('(!) Se exportó un .txt con las producciones analizadas.')
+            print('(✅) Sintácticamente correcto. Se exportó un .html con los comentarios.')
+            print('(!) Se exportó un .txt con las producciones analizadas.')
     except IOError:
         print('Ocurrió un error leyendo archivo:', cleanPath)
 
