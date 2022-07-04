@@ -2,12 +2,12 @@ from logicaMenu import logicaMenu
 from helpers import pedirRuta
 from obtenerHtml import exportarHtml
 
-import ply.ply.yacc as yacc  # parser
+import ply.yacc as yacc  # parser
 # Importar lexer para luego reiniciarlo (para no guardar su estado anterior)
 import lexer
 from lexer import tokens
 
-from importlib import reload  
+from importlib import reload
 
 exportarTxt = list()
 contadorErrores = 0
@@ -257,7 +257,7 @@ def p_error(p):
         exportarTxt.append(['Error parser -->', p])
     else:
         exportarTxt.append(['Error parser --> falta `cerrarrss`', None])
-    
+
     contadorErrores += 1
 
 parser = yacc.yacc()  # Ignorar warnings.
@@ -289,7 +289,7 @@ def analizarPorRuta():
                 f.write('-------------\n')
                 f.write(f'Total de tokens analizados: {contador}.\n')
             f.close()
-        except: 
+        except:
             print('Error creando logs')
         if contadorErrores > 0:
             print('(⨉) Ocurrió un error sintáctico.')
@@ -325,4 +325,3 @@ if __name__ == "__main__":
         analizarPorRuta,
         analizarPorLinea,
     )
-
