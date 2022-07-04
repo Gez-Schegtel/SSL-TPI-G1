@@ -1,4 +1,4 @@
-import ply.lex as lex   # lexer -> tokens
+import ply.ply.lex as lex   # lexer -> tokens
 import re
 from logicaMenu import cls, logicaMenu
 from helpers import pedirRuta
@@ -164,8 +164,7 @@ def analizarPorLinea():
 # Exportar TOKENS a un .txt
 def exportarTokens(arrAnalizar):
     global contadorErrores
-    from datetime import datetime
-    fileNameExport = f'tokens-analizados-{datetime.now().isoformat()}.txt'
+    fileNameExport = f'tokens-analizados.txt'
     with open(fileNameExport, 'w', encoding='UTF8') as f:
         f.write('TOKEN | VALOR\n')
         f.write('-------------\n')

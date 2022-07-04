@@ -2,7 +2,7 @@ from logicaMenu import logicaMenu
 from helpers import pedirRuta
 from obtenerHtml import exportarHtml
 
-import ply.yacc as yacc  # parser
+import ply.ply.yacc as yacc  # parser
 # Importar lexer para luego reiniciarlo (para no guardar su estado anterior)
 import lexer
 from lexer import tokens
@@ -278,18 +278,19 @@ def analizarPorRuta():
         strings = file.read()
         file.close()
         result = parser.parse(strings)
-        from datetime import datetime
-
-        with open(f'producciones-analizadas-{datetime.now().isoformat()}.txt', 'w', encoding='UTF8') as f:
-            f.write('Producciones analizadas por el parser\n-----------------\n')
-            contador = 0
-            for line in exportarTxt:
-                contador += 1
-                f.write(f'{contador}) {line[0]} | {line[1]}\n')
+        try:
+            with open(f'producciones-analizadas.txt', 'w', encoding='UTF8') as f:
+                f.write('Producciones analizadas por el parser\n-----------------\n')
+                contador = 0
+                for line in exportarTxt:
+                    contador += 1
+                    f.write(f'{contador}) {line[0]} | {line[1]}\n')
+                    f.write('-------------\n')
                 f.write('-------------\n')
-            f.write('-------------\n')
-            f.write(f'Total de tokens analizados: {contador}.\n')
-        f.close()
+                f.write(f'Total de tokens analizados: {contador}.\n')
+            f.close()
+        except: 
+            print('Error creando logs')
         if contadorErrores > 0:
             print('(⨉) Ocurrió un error sintáctico.')
             # Resetear contador
