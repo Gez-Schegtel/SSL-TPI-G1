@@ -7,7 +7,7 @@ import ply.yacc as yacc  # parser
 import lexer
 from lexer import tokens
 
-from importlib import reload  
+from importlib import reload
 
 exportarTxt = list()
 contadorErrores = 0
@@ -257,7 +257,7 @@ def p_error(p):
         exportarTxt.append(['Error parser -->', p])
     else:
         exportarTxt.append(['Error parser --> falta `cerrarrss`', None])
-    
+
     contadorErrores += 1
 
 parser = yacc.yacc()  # Ignorar warnings.
@@ -278,18 +278,19 @@ def analizarPorRuta():
         strings = file.read()
         file.close()
         result = parser.parse(strings)
-        from datetime import datetime
-
-        with open(f'producciones-analizadas-{datetime.now().isoformat()}.txt', 'w', encoding='UTF8') as f:
-            f.write('Producciones analizadas por el parser\n-----------------\n')
-            contador = 0
-            for line in exportarTxt:
-                contador += 1
-                f.write(f'{contador}) {line[0]} | {line[1]}\n')
+        try:
+            with open(f'producciones-analizadas.txt', 'w', encoding='UTF8') as f:
+                f.write('Producciones analizadas por el parser\n-----------------\n')
+                contador = 0
+                for line in exportarTxt:
+                    contador += 1
+                    f.write(f'{contador}) {line[0]} | {line[1]}\n')
+                    f.write('-------------\n')
                 f.write('-------------\n')
-            f.write('-------------\n')
-            f.write(f'Total de tokens analizados: {contador}.\n')
-        f.close()
+                f.write(f'Total de tokens analizados: {contador}.\n')
+            f.close()
+        except:
+            print('Error creando logs')
         if contadorErrores > 0:
             print('(⨉) Ocurrió un error sintáctico.')
             # Resetear contador
@@ -324,4 +325,3 @@ if __name__ == "__main__":
         analizarPorRuta,
         analizarPorLinea,
     )
-
