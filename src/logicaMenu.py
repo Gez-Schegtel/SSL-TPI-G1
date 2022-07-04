@@ -10,25 +10,6 @@ def printMenu(menuOptions):
     for key in menuOptions.keys():
         print(key, '--', menuOptions[key])
 
-"""
-HACER FUNCION EXPORTAR HTML
-    <title>ALgo</title>
-    
-    [
-        {
-            tipo: 'titulo',
-            contenido: 'Algo',
-        },
-        {
-            tipo: 'titulo',
-            contenido: 'Algo',
-        },
-    ]
-
-"""
-
-
-
 def logicaMenu(
     nombrePrograma: str,
     opcionesMenu: 'dict[int, str]',
