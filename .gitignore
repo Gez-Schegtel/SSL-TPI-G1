@@ -2,5 +2,5 @@ build/
 dist/
 .DS_Store
 
-producciones-analizadas-*
-tokens-analizados-*
+producciones-analizadas*
+tokens-analizados*
